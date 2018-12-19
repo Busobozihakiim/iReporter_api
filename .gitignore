@@ -1,3 +1,4 @@
-iReporter_venv
+iReporter_venv/*
+.vscode/*
 __pycache__/
 *__init__.pyc*
