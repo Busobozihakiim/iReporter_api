@@ -22,7 +22,7 @@ def gets_records():
     """returns all records"""
     if RECORDS:
         return jsonify({"status":200, "data":RECORDS})
-    return jsonify({"status":404, "error":"You dont have any delivery orders"}), 404
+    return jsonify({"status":404, "error":"You dont have any red flag records"}), 404
 
 @app.route(PREFIX, methods=['POST'])
 def create_record():
