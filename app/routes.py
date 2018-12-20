@@ -72,9 +72,28 @@ def edits_records_location(red_flag_id):
                         "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
 
 @app.route(PREFIX + '/<int:red_flag_id>/comment', methods=['PATCH'])
-def edits_records_comment():
+def edits_records_comment(red_flag_id):
     """changes the comment in a record"""
-    pass
+    new_comment = request.get_json()
+
+    if not new_comment:
+        return jsonify({"status":400, "error":"You entered nothing"}), 400
+
+    if new_comment['comment'] in (' ', ''):
+        return jsonify({"status":400,
+                        "error":"You have not entered the new comment"}), 400
+
+    try:
+        if RECORDS:
+            comment = [current for current in RECORDS if current['id'] == red_flag_id]
+            comment[0]['comment'] = '{}'.format(new_comment['comment'])
+            return jsonify({"status":201,
+                            "data":[{"id": comment[0]["id"],
+                                     "message":"Updated red-flag record’s comment"}]}), 201
+        return jsonify({"status":404, "error":"You have no red flag records"}), 404
+    except IndexError:
+        return jsonify({"status":404,
+                        "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
 
 @app.route(PREFIX + '/<int:red_flag_id>', methods=['DELETE'])
 def remove_record():
