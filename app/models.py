@@ -16,5 +16,5 @@ def add_record(the_type, location, images, videos, comment):
         'comment':comment,
         }
     RECORDS.append(record)
-    return RECORDS
+    return record
         

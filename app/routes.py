@@ -1,6 +1,6 @@
 """ROUTES FOR THE API"""
-from flask import Flask, jsonify
-from .models import RECORDS
+from flask import Flask, jsonify, request
+from .models import RECORDS, add_record
 
 app = Flask(__name__)
 PREFIX = '/api/v1/red_flags'
@@ -27,7 +27,25 @@ def gets_records():
 @app.route(PREFIX, methods=['POST'])
 def create_record():
     """creates a red-flag or intervention record"""
-    pass
+    report = request.get_json() or {}
+    #check for an empty post and missing fields
+    if not report:
+        return jsonify({"status":400, "error":"You entered nothing"}), 400
+
+    if len(report) < 5:
+        return jsonify({"status":400, "error":"You are missing a field"}), 400
+
+    #check for empty values in post and return missing field
+    for key, value in report.items():
+        if value in (' ', ''):
+            return jsonify({"status":400,
+                            "error":"You are missing value of '{}' in your input".format(key)}), 400
+
+    #create a red-flag or intervention report
+    report = add_record(report['type'], report['location'], report['images'],
+                        report['videos'], report['comment'])
+    return jsonify({"status":201,
+                    "data":[{"id": report["id"], "message":"Created red-flag record"}]}), 201
 
 @app.route(PREFIX + '/<int:red_flag_id>/location', methods=['PATCH'])
 def edits_records_location():
