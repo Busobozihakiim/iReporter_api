@@ -30,6 +30,14 @@ def test_change_redflags_location_with_no_records(_setup):
     assert response.status_code == 404
     assert 'You have no red flag records' in str(response.json)
 
+def test_change_redflags_comment_with_no_records(_setup):
+    """test edit of a comment when no red flags are available"""
+    response = _setup.patch('/api/v1/red_flags/1/comment',
+                            data=json.dumps({"comment":"the new comment"}),
+                            content_type='application/json')
+    assert response.status_code == 404
+    assert 'You have no red flag records' in str(response.json)
+
 def test_create_record_with_no_data(_setup):
     """Test whether the user has submitted an empty post"""
     response = _setup.post('/api/v1/red_flags',
@@ -109,3 +117,34 @@ def test_edits_records_location_when_id_not_exists(_setup):
                             content_type='application/json')
     assert response.status_code == 404
     assert 'The red flag of id 2 does not exist' in str(response.json)
+
+def test_edits_records_comment(_setup):
+    """test editing when everything is empty"""
+    response = _setup.patch('/api/v1/red_flags/2/comment')
+    assert response.status_code == 400
+    assert 'You entered nothing' in str(response.json)
+
+def test_edits_records_comment_no_comment(_setup):
+    """test change of comment with no new comment"""
+    response = _setup.patch('/api/v1/red_flags/2/comment',
+                            data=json.dumps({"comment":""}),
+                            content_type='application/json')
+    assert response.status_code == 400
+    assert 'You have not entered the new comment' in str(response.json)
+
+def test_change_redflags_comment(_setup):
+    """test change of comment """
+    response = _setup.patch('/api/v1/red_flags/1/comment',
+                            data=json.dumps({"comment":"the new comment"}),
+                            content_type='application/json')
+    assert response.status_code == 201
+    assert 'Updated red-flag record’s comment' in str(response.json)
+
+def test_edits_records_comment_when_id_not_exists(_setup):
+    """test change of comment when the record is not available"""
+    response = _setup.patch('/api/v1/red_flags/2/comment',
+                            data=json.dumps({"comment":"the new comment"}),
+                            content_type='application/json')
+    assert response.status_code == 404
+    assert 'The red flag of id 2 does not exist' in str(response.json)
+    
