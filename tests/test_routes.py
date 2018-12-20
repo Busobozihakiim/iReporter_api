@@ -25,4 +25,16 @@ def test_get_one_record_with_missing_id(_setup):
     response = _setup.get('/api/v1/red_flags/2')
     assert response.status_code == 200
     assert 'this red flag order of id 2 doesnt exist' in  str(response.json)
+
+def test_gets_records(_setup):
+    """test when records have been made"""
+    response = _setup.get('/api/v1/red_flags')
+    assert response.status_code == 200
+    assert 'lorem ipsum doe' in str(response.json)
+
+def test_gets_records_when_null(_setup):
+    """test when no incident report has been made"""
+    response = _setup.get('/api/v1/red_flags')
+    assert response.status_code == 404
+    assert 'You dont have any delivery orders' in str(response.json)
     

@@ -1,3 +1,4 @@
+"""ROUTES FOR THE API"""
 from flask import Flask, jsonify
 from .models import RECORDS
 
@@ -13,12 +14,15 @@ def get_one_record(red_flag_id):
             return jsonify({"status":200, "data":order[0]})
         return jsonify({"status":200, "error":"No red flags made yet"})
     except IndexError:
-        return jsonify({"status":200, "error":"this red flag order of id {} doesnt exist".format(red_flag_id)})
+        return jsonify({"status":200,
+                        "error":"this red flag order of id {} doesnt exist".format(red_flag_id)})
 
 @app.route(PREFIX)
 def gets_records():
     """returns all records"""
-    return 'my'
+    if RECORDS:
+        return jsonify({"status":200, "data":RECORDS})
+    return jsonify({"status":404, "error":"You dont have any delivery orders"}), 404
 
 @app.route(PREFIX, methods=['POST'])
 def create_record():
