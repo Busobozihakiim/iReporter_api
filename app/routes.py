@@ -48,9 +48,28 @@ def create_record():
                     "data":[{"id": report["id"], "message":"Created red-flag record"}]}), 201
 
 @app.route(PREFIX + '/<int:red_flag_id>/location', methods=['PATCH'])
-def edits_records_location():
+def edits_records_location(red_flag_id):
     """changes location of a record"""
-    pass
+    new_location = request.get_json()
+
+    if not new_location:
+        return jsonify({"status":400, "error":"You entered nothing"}), 400
+
+    if new_location['location'] in (' ', ''):
+        return jsonify({"status":400,
+                        "error":"You have not entered the cordinates"}), 400
+
+    try:
+        if RECORDS:
+            location = [current for current in RECORDS if current['id'] == red_flag_id]
+            location[0]['location'] = '{}'.format(new_location['location'])
+            return jsonify({"status":201,
+                            "data":[{"id": location[0]["id"],
+                                     "message":"Updated red-flag record’s location"}]}), 201
+        return jsonify({"status":404, "error":"You have no red flag records"}), 404
+    except IndexError:
+        return jsonify({"status":404,
+                        "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
 
 @app.route(PREFIX + '/<int:red_flag_id>/comment', methods=['PATCH'])
 def edits_records_comment():
