@@ -59,10 +59,10 @@ def edits_records_location(red_flag_id):
 
     try:
         if records.all_records():
-            new_location = records.edit_location(user_input, red_flag_id)
+            new_location = records.edit_field(user_input, red_flag_id, key='location')
             return jsonify({"status":201,
                             "data":[{"id":new_location,
-                                     "message":"Updated red-flag record’s location"}]}), 201
+                                     "message":"Updated red-flag records location"}]}), 201
         return jsonify({"status":404, "error":"You have no red flag records"}), 404
     except IndexError:
         return jsonify({"status":404,
@@ -79,12 +79,11 @@ def edits_records_comment(red_flag_id):
     if from_user['comment'] in (' ', ''):
         return jsonify({"status":400,
                         "error":"You have not entered the new comment"}), 400
-
     try:
         if records.all_records():
-            new_comment = records.edit_comment(from_user, red_flag_id)
+            new_status = records.edit_field(from_user, red_flag_id, key='comment')
             return jsonify({"status":201,
-                            "data":[{"id":new_comment,
+                            "data":[{"id":new_status,
                                      "message":"Updated red-flag record’s comment"}]}), 201
         return jsonify({"status":404, "error":"You have no red flag records"}), 404
     except IndexError:
@@ -104,7 +103,26 @@ def remove_record(red_flag_id):
         return jsonify({"status":404,
                         "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
 
-@app.route('/api/v1/red_flags/<int:red_flag_id>', methods=['PATCH'])
-def edit_status():
+@app.route('/api/v1/red_flags/<int:red_flag_id>/status', methods=['PATCH'])
+def edit_status(red_flag_id):
     """Admin edits records"""
-    pass
+    admin_input = request.get_json()
+
+    if not admin_input:
+        return jsonify({"status":400, "error":"You entered nothing"}), 400
+
+    if admin_input['status'] in (' ', ''):
+        return jsonify({"status":400,
+                        "error":"You have not entered the new status"}), 400
+
+    try:
+        if records.all_records():
+            new_status = records.edit_field(admin_input, red_flag_id, key='status')
+            return jsonify({"status":201,
+                            "data":[{"id":new_status,
+                                     "message":"Updated red-flag record’s status"}]}), 201
+        return jsonify({"status":404, "error":"You have no red flag records"}), 404
+    except IndexError:
+        return jsonify({"status":404,
+                        "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
+

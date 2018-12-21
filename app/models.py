@@ -32,17 +32,11 @@ class Incidents:
         record = [this_id for this_id in self.records if this_id['id'] == report_id]
         return record
 
-    def edit_location(self, new_location, report_id):
+    def edit_field(self, new_value, report_id, key='location'):
         """change the location of a record"""
-        location = self.one_record(report_id)
-        location[0]['location'] = new_location['location']
-        return location[0]['id']
-
-    def edit_comment(self, new_comment, report_id):
-        """change the comment of a record"""
-        comment = self.one_record(report_id)
-        comment[0]['location'] = new_comment['comment']
-        return comment[0]['id']
+        edits = self.one_record(report_id)
+        edits[0][key] = new_value[key]
+        return edits[0]['id']
 
     def delete_redflag(self, report_id):
         """delete a redflag record"""
