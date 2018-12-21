@@ -147,4 +147,16 @@ def test_edits_records_comment_when_id_not_exists(_setup):
                             content_type='application/json')
     assert response.status_code == 404
     assert 'The red flag of id 2 does not exist' in str(response.json)
+
+def test_remove_red_flag_record_when_id_doest_exist(_setup):
+    """test remove of a record"""
+    response = _setup.delete('/api/v1/red_flags/3')
+    assert response.status_code ==  404
+    assert 'The red flag of id 3 does not exist' in str(response.json)
+    
+def test_remove_red_flag_record(_setup):
+    """test remove of a record"""
+    response = _setup.delete('/api/v1/red_flags/1')
+    assert response.status_code ==  200
+    assert 'red-flag record has been deleted' in str(response.json)
     
