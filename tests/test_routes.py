@@ -38,6 +38,14 @@ def test_change_redflags_comment_with_no_records(_setup):
     assert response.status_code == 404
     assert 'You have no red flag records' in str(response.json)
 
+def test_edit_status_with_no_records(_setup):
+    """Test status editing when no redflags are available """
+    response = _setup.patch('/api/v1/red_flags/1/status',
+                           data=json.dumps({"status":"resolved"}),
+                           content_type='application/json')
+    assert response.status_code == 404
+    assert 'You have no red flag records' in str(response.data)
+
 def test_create_record_with_no_data(_setup):
     """Test whether the user has submitted an empty post"""
     response = _setup.post('/api/v1/red_flags',
@@ -108,7 +116,7 @@ def test_change_redflags_location(_setup):
                             data=json.dumps({"location":"32.565, 26.356"}),
                             content_type='application/json')
     assert response.status_code == 201
-    assert 'Updated red-flag record’s location' in str(response.json)
+    assert 'Updated red-flag records location' in str(response.json)
 
 def test_edits_records_location_when_id_not_exists(_setup):
     """test change of location when the record is not available"""
@@ -154,6 +162,38 @@ def test_remove_red_flag_record_when_id_doest_exist(_setup):
     assert response.status_code ==  404
     assert 'The red flag of id 3 does not exist' in str(response.json)
     
+def test_change_redflags_status(_setup):
+    """test change of status """
+    response = _setup.patch('/api/v1/red_flags/1/status',
+                            data=json.dumps({"status":"under investigation"}),
+                            content_type='application/json')
+    assert response.status_code == 201
+    assert 'Updated red-flag record’s status' in str(response.json)
+
+def test_edits_records_status_when_id_not_exists(_setup):
+    """test change of status when the record is not available"""
+    response = _setup.patch('/api/v1/red_flags/2/status',
+                            data=json.dumps({"status":"rejected"}),
+                            content_type='application/json')
+    assert response.status_code == 404
+    assert 'The red flag of id 2 does not exist' in str(response.json)
+
+def test_edit_status_with_no_data(_setup):
+    """Test whether what the admin has submitted is empty """
+    response = _setup.patch('/api/v1/red_flags/1/status',
+                           data=json.dumps({}),
+                           content_type='application/json')
+    assert response.status_code == 400
+    assert b'You entered nothing' in response.data
+
+def test_edit_status_with_missing_value(_setup):
+    """Test whether what the admin has submitted is empty """
+    response = _setup.patch('/api/v1/red_flags/1/status',
+                           data=json.dumps({"status":""}),
+                           content_type='application/json')
+    assert response.status_code == 400
+    assert b'You have not entered the new status' in response.data
+
 def test_remove_red_flag_record(_setup):
     """test remove of a record"""
     response = _setup.delete('/api/v1/red_flags/1')
