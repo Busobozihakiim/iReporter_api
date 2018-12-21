@@ -82,7 +82,7 @@ def test_edits_records_location_no_cordinates(_setup):
     response = _setup.patch('/api/v1/red_flags/2/location',
                             data=json.dumps({"location":""}),
                             content_type='application/json')
-    assert 'You have not entered the cordinates' in str(response.json)
+    assert 'You have not entered the new location' in str(response.json)
 
 def test_change_redflags_location(_setup):
     """test change of location """
@@ -110,7 +110,7 @@ def test_change_redflags_comment(_setup):
     response = _setup.patch('/api/v1/red_flags/1/comment',
                             data=json.dumps({"comment":"the new comment"}),
                             content_type='application/json')
-    assert 'Updated red-flag record’s comment' in str(response.json)
+    assert 'Updated red-flag records comment' in str(response.json)
 
 def test_edits_records_comment_when_id_not_exists(_setup):
     """test change of comment when the record is not available"""
@@ -130,7 +130,7 @@ def test_change_redflags_status(_setup):
     response = _setup.patch('/api/v1/red_flags/1/status',
                             data=json.dumps({"status":"under investigation"}),
                             content_type='application/json')
-    assert 'Updated red-flag record’s status' in str(response.json)
+    assert 'Updated red-flag records status' in str(response.json)
 
 def test_edits_records_status_when_id_not_exists(_setup):
     """test change of status when the record is not available"""

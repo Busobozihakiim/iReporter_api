@@ -1,6 +1,7 @@
 """ROUTES FOR THE API"""
 from flask import Flask, jsonify, request
 from .models import Incidents
+from .helper import edit_helper
 
 app = Flask(__name__)
 
@@ -46,40 +47,13 @@ def create_record():
 def edits_records_location(red_flag_id):
     """changes location of a record"""
     user_input = request.get_json()
-
-    if user_input['location'] in ("", " "):
-        return jsonify({"status":400,
-                        "error":"You have not entered the cordinates"}), 400
-
-    try:
-        if records.all_records():
-            new_location = records.edit_field(user_input, red_flag_id, key='location')
-            return jsonify({"status":201,
-                            "data":[{"id":new_location,
-                                     "message":"Updated red-flag records location"}]}), 201
-        return jsonify({"status":404, "error":"You have no red flag records"}), 404
-    except IndexError:
-        return jsonify({"status":404,
-                        "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
+    return edit_helper(red_flag_id, user_input, "location")
 
 @app.route('/api/v1/red_flags/<int:red_flag_id>/comment', methods=['PATCH'])
 def edits_records_comment(red_flag_id):
     """changes the comment in a record"""
     from_user = request.get_json()
-
-    if from_user['comment'] in ("", " "):
-        return jsonify({"status":400,
-                        "error":"You have not entered the new comment"}), 400
-    try:
-        if records.all_records():
-            new_status = records.edit_field(from_user, red_flag_id, key='comment')
-            return jsonify({"status":201,
-                            "data":[{"id":new_status,
-                                     "message":"Updated red-flag record’s comment"}]}), 201
-        return jsonify({"status":404, "error":"You have no red flag records"}), 404
-    except IndexError:
-        return jsonify({"status":404,
-                        "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
+    return edit_helper(red_flag_id, from_user, "comment")
 
 @app.route('/api/v1/red_flags/<int:red_flag_id>', methods=['DELETE'])
 def remove_record(red_flag_id):
@@ -97,19 +71,5 @@ def remove_record(red_flag_id):
 def edit_status(red_flag_id):
     """Admin edits records"""
     admin_input = request.get_json()
-
-    if admin_input['status'] in ("", " "):
-        return jsonify({"status":400,
-                        "error":"You have not entered the new status"}), 400
-
-    try:
-        if records.all_records():
-            new_status = records.edit_field(admin_input, red_flag_id, key='status')
-            return jsonify({"status":201,
-                            "data":[{"id":new_status,
-                                     "message":"Updated red-flag record’s status"}]}), 201
-        return jsonify({"status":404, "error":"You have no red flag records"}), 404
-    except IndexError:
-        return jsonify({"status":404,
-                        "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
-
+    return edit_helper(red_flag_id, admin_input, "status")
+    
