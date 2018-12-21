@@ -30,14 +30,11 @@ def create_record():
     """creates a red-flag or intervention record"""
     report = request.get_json() or {}
 
-    if not report:
-        return jsonify({"status":400, "error":"You entered nothing"}), 400
-
     if len(report) < 5:
         return jsonify({"status":400, "error":"You are missing a field"}), 400
 
     for key, value in report.items():
-        if value in (' ', ''):
+        if value in ("", " "):
             return jsonify({"status":400,
                             "error":"You are missing value of '{}' in your input".format(key)}), 400
 
@@ -50,10 +47,7 @@ def edits_records_location(red_flag_id):
     """changes location of a record"""
     user_input = request.get_json()
 
-    if not user_input:
-        return jsonify({"status":400, "error":"You entered nothing"}), 400
-
-    if user_input['location'] in (' ', ''):
+    if user_input['location'] in ("", " "):
         return jsonify({"status":400,
                         "error":"You have not entered the cordinates"}), 400
 
@@ -73,10 +67,7 @@ def edits_records_comment(red_flag_id):
     """changes the comment in a record"""
     from_user = request.get_json()
 
-    if not from_user:
-        return jsonify({"status":400, "error":"You entered nothing"}), 400
-
-    if from_user['comment'] in (' ', ''):
+    if from_user['comment'] in ("", " "):
         return jsonify({"status":400,
                         "error":"You have not entered the new comment"}), 400
     try:
@@ -95,10 +86,9 @@ def remove_record(red_flag_id):
     """deletes record"""
     try:
         deleted = records.delete_redflag(red_flag_id)
-        if deleted :
-            return jsonify({"status":200,
-                            "data":[{"id":deleted,
-                                     "message":"red-flag record has been deleted"}]})
+        return jsonify({"status":200,
+                        "data":[{"id":deleted,
+                                 "message":"red-flag record has been deleted"}]})
     except IndexError:
         return jsonify({"status":404,
                         "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
@@ -108,10 +98,7 @@ def edit_status(red_flag_id):
     """Admin edits records"""
     admin_input = request.get_json()
 
-    if not admin_input:
-        return jsonify({"status":400, "error":"You entered nothing"}), 400
-
-    if admin_input['status'] in (' ', ''):
+    if admin_input['status'] in ("", " "):
         return jsonify({"status":400,
                         "error":"You have not entered the new status"}), 400
 
