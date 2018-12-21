@@ -43,3 +43,9 @@ class Incidents:
         comment = self.one_record(report_id)
         comment[0]['location'] = new_comment['comment']
         return comment[0]['id']
+
+    def delete_redflag(self, report_id):
+        """delete a redflag record"""
+        delete = self.one_record(report_id)
+        self.records.remove(delete[0])
+        return delete[0]['id']

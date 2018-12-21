@@ -92,9 +92,17 @@ def edits_records_comment(red_flag_id):
                         "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
 
 @app.route('/api/v1/red_flags/<int:red_flag_id>', methods=['DELETE'])
-def remove_record():
+def remove_record(red_flag_id):
     """deletes record"""
-    pass
+    try:
+        deleted = records.delete_redflag(red_flag_id)
+        if deleted :
+            return jsonify({"status":200,
+                            "data":[{"id":deleted,
+                                     "message":"red-flag record has been deleted"}]})
+    except IndexError:
+        return jsonify({"status":404,
+                        "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
 
 @app.route('/api/v1/red_flags/<int:red_flag_id>', methods=['PATCH'])
 def edit_status():
