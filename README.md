@@ -93,8 +93,8 @@ where STATUS = resolved, rejected, under-investigation
 | ------------- | ------------- |
 | POST /red-flags | Create a red flag record |
 | GET /red-flags | Fetch all red flag records |
-| GET /red-flags/<red-flag-id>| Fetch a single red flag record given its id |
-| PATCH /red-flags/<red-flag-id>/location| Edit the location of a redflag record |
-| PATCH /red-flags/<red-flag-id>/location| Edit the location of a redflag record |
-| DELETE /red-flags/<red-flag-id>| Delete a red fag record given an id |
-| PATCH /red-flags/<red-flag-id>| Change the status of a record given an id |
+| GET /red-flags/\<red-flag-id> | Fetch a single red flag record given its id |
+| PATCH /red-flags/\<red-flag-id>/location | Edit the location of a redflag record |
+| PATCH /red-flags/\<red-flag-id>/comment | Edit the comment of a redflag record |
+| DELETE /red-flags/\<red-flag-id> | Delete a red fag record given an id |
+| PATCH /red-flags/\<red-flag-id>/status | Change the status of a record given an id |

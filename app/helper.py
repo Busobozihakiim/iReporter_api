@@ -6,7 +6,7 @@ records = Incidents()
 
 def edit_helper(the_id, user_input, key):
     """validates input and makes a change to the red flag."""
-    if user_input['{}'.format(key)] in ("", " "):
+    if len(user_input) == 0 or user_input['{}'.format(key)] in ("", " "):
         return jsonify({"status":400,
                         "error":"You have not entered the new {}".format(key)}), 400
     try:

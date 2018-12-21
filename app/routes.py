@@ -43,16 +43,6 @@ def create_record():
     return jsonify({"status":201,
                     "data":[{"id": report["id"], "message":"Created red-flag record"}]}), 201
 
-@app.route('/api/v1/red_flags/<int:red_flag_id>/location', methods=['PATCH'])
-def edits_records_location(red_flag_id):
-    """changes location of a record"""
-    return edit_helper(red_flag_id, request.get_json(), "location")
-
-@app.route('/api/v1/red_flags/<int:red_flag_id>/comment', methods=['PATCH'])
-def edits_records_comment(red_flag_id):
-    """changes the comment in a record"""
-    return edit_helper(red_flag_id, request.get_json(), "comment")
-
 @app.route('/api/v1/red_flags/<int:red_flag_id>', methods=['DELETE'])
 def remove_record(red_flag_id):
     """deletes record"""
@@ -65,8 +55,11 @@ def remove_record(red_flag_id):
         return jsonify({"status":404,
                         "error":"The red flag of id {} does not exist".format(red_flag_id)}), 404
 
-@app.route('/api/v1/red_flags/<int:red_flag_id>/status', methods=['PATCH'])
-def edit_status(red_flag_id):
-    """Admin edits records"""
-    return edit_helper(red_flag_id, request.get_json(), "status")
+@app.route('/api/v1/red_flags/<int:red_flag_id>/<field>', methods=['PATCH'])
+def edit_status(red_flag_id, field):
+    """edits the field passed in the url by id"""
+    try:
+        return edit_helper(red_flag_id, request.get_json(), field)
+    except KeyError:
+        return jsonify({"status":404, "message":"route not available"}), 404
     

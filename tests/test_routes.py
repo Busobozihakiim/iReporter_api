@@ -150,4 +150,10 @@ def test_remove_red_flag_record(_setup):
     """test remove of a record"""
     response = _setup.delete('/api/v1/red_flags/1')
     assert 'red-flag record has been deleted' in str(response.json)
-    
+
+def test_edit_when_wrong_endpoint_is_given(_setup):
+    """test edit of a record with wrong endpoint"""
+    response = _setup.patch('/api/v1/red_flags/1/wrongendpoint',
+                            data=json.dumps({"status":""}),
+                            content_type='application/json')
+    assert 'route not available' in str(response.json)
