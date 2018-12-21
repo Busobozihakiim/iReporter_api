@@ -46,14 +46,12 @@ def create_record():
 @app.route('/api/v1/red_flags/<int:red_flag_id>/location', methods=['PATCH'])
 def edits_records_location(red_flag_id):
     """changes location of a record"""
-    user_input = request.get_json()
-    return edit_helper(red_flag_id, user_input, "location")
+    return edit_helper(red_flag_id, request.get_json(), "location")
 
 @app.route('/api/v1/red_flags/<int:red_flag_id>/comment', methods=['PATCH'])
 def edits_records_comment(red_flag_id):
     """changes the comment in a record"""
-    from_user = request.get_json()
-    return edit_helper(red_flag_id, from_user, "comment")
+    return edit_helper(red_flag_id, request.get_json(), "comment")
 
 @app.route('/api/v1/red_flags/<int:red_flag_id>', methods=['DELETE'])
 def remove_record(red_flag_id):
@@ -70,6 +68,5 @@ def remove_record(red_flag_id):
 @app.route('/api/v1/red_flags/<int:red_flag_id>/status', methods=['PATCH'])
 def edit_status(red_flag_id):
     """Admin edits records"""
-    admin_input = request.get_json()
-    return edit_helper(red_flag_id, admin_input, "status")
+    return edit_helper(red_flag_id, request.get_json(), "status")
     
